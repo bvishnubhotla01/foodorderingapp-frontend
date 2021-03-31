@@ -1,15 +1,15 @@
 import React, { Component } from "react";
 import Header from "../../common/header/Header";
 
-class Details extends Component {
+class Profile extends Component {
   render() {
     return (
       <div className="mainDiv">
         <Header />
-        Details page
+        Profile page
       </div>
     );
   }
 }
 
-export default Details;
+export default Profile;
