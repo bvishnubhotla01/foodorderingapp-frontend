@@ -1,6 +1,5 @@
 body {
     height: 100%;
-    overflow:hidden;
     margin: 0px;
     padding:0px;
 }
@@ -43,6 +42,55 @@ table {
     width: 100%;
 
 }
+.menuItemsContainer {
+    display: flex;
+    width: 100%;
+    margin-top: 1%;;
+}
+.menu {
+    width: 50%;
+}
+.cart {
+    width: 50%;
+}
+.veg {
+    color: green;
+    margin-right: 20px;
+}
+
+.non-veg {
+    color: red;
+    margin-right: 20px;
+}
+
+.price-info {
+  display:flex;  
+  align-self: center;
+  width: 50%;
+}
+
+.spacing {
+ margin-right: 50px;
+}
+.category-name-container {
+    color: gray;
+    text-transform: uppercase;
+    padding: 10px;
+ }
+ .divider-line {
+     padding: 5px;
+ }
+ 
+ .item-container {
+     display: flex;
+     margin: 10px;
+ }
+ 
+ .item-info{
+     display:flex;
+     align-self: center;
+     width: 50%;
+ }
 @media only screen and (max-width: 600px) {
     .restaurantDetailsContainer {
       background-color: lightgrey;
@@ -61,6 +109,25 @@ table {
         flex-basis: content;
     }
     .detailsContainer {
+        display: flex;
+        width: 100%;
+        margin-left: 15px;
+        flex-wrap: wrap;
+    }
+    .menuItemsContainer {
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: column;
+        align-items: center;
+        width: 100vw;
+    }
+    .menu {
+        display: flex;
+        width:100%;
+        margin: 10px;
+        flex-wrap: wrap;
+    }
+    .cart {
         display: flex;
         width: 100%;
         margin-left: 15px;

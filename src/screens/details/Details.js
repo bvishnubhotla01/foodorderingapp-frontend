@@ -3,7 +3,12 @@ import './Details.css';
 import Header from '../../common/header/Header';
 import StarIcon from '@material-ui/icons/Star';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faRupeeSign}  from '@fortawesome/free-solid-svg-icons';
+import {faRupeeSign, faCircle}  from '@fortawesome/free-solid-svg-icons';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import IconButton from '@material-ui/core/IconButton';
+import Divider from '@material-ui/core/Divider';
+import Add from '@material-ui/icons/Add';
 
 class Details extends Component {
     constructor() {
@@ -56,8 +61,54 @@ render() {
                             </table>
                         </div>
                     </div>
-                
                 </div>
+            </div>
+            <div className="menuItemsContainer">
+                <div className="menu">
+                    <Card>  
+                        <CardContent id="categoryItems">
+                            { this.state.categoriesList.map(category => (
+                            <div key={"category-"+category.id}>
+                                <div className="category-name-container">
+                                    {category.category_name}
+                                </div>
+                                <div className="divider-line">
+                                    <Divider variant='fullWidth'/>
+                                </div>
+                                {category.item_list.map(item => (
+                                    <div className="item-container" key={"item-"+item.id}>
+                                        <span className="item-info">
+                                            {
+                                                item.item_type === "NON_VEG" && 
+                                                <FontAwesomeIcon icon={faCircle} className="non-veg"/>
+                                            }
+                                            {
+                                                 item.item_type === "VEG" && 
+                                                 <FontAwesomeIcon icon={faCircle} className="veg"/>
+                                            }
+                                            {(item.item_name)}
+                                        </span>
+                                        <div className="price-info">
+                                             <span className="spacing">
+                                                <FontAwesomeIcon icon={faRupeeSign}/>{parseFloat(Math.round(item.price * 100) / 100).toFixed(2)}
+                                            </span> 
+                                        </div>
+                                        <IconButton>
+                                                 <Add />
+                                        </IconButton>
+                                        <br/>
+                                    </div>
+                                 ))
+                                }
+                            </div>
+                        ))}
+                        </CardContent>             
+                    </Card>
+                </div>
+                <div className="cart">
+                    <h3>Cart PlaceHolder</h3>
+                </div>
+
             </div>
 
                  
@@ -91,6 +142,6 @@ getRestaurantCategories = () => {
     }
     return categoriesString;
 }
-
 }
+
 export default Details;
