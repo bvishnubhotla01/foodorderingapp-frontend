@@ -145,10 +145,11 @@ class Checkout extends Component {
     let b = document.getElementsByClassName('address')
     for (var x = 0; x < b.length; x++) {
       b[x].style.borderStyle = 'none'
+      b[x].style.boxShadow = 'none'
     }
     a.style.borderStyle = "solid"
     a.style.borderColor = "red"
-    a.style.boxShadow = 'brown'
+    a.style.boxShadow = 'red 10px 10px'
     let d = document.getElementById('i' + key)
     let e = document.getElementsByClassName('icon')
     for (var x = 0; x < b.length; x++) {
