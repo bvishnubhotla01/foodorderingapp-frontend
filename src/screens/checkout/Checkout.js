@@ -12,13 +12,15 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
-import { IconButton } from '@material-ui/core';
+import { FormHelperText, IconButton, MenuItem } from '@material-ui/core';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
+import { Select } from '@material-ui/core';
+import { Input, InputLabel } from '@material-ui/core';
 
 
 function getSteps() {
@@ -26,7 +28,7 @@ function getSteps() {
 }
 
 
-
+let state;
 
 const steps = getSteps();
 
@@ -54,7 +56,20 @@ class Checkout extends Component {
       flag: false,
       payment: "",
       index: 0,
-      valueRadio: ""
+      valueRadio: "",
+      state: "",
+      flagState: false,
+      flagFlat: false,
+      flagLocality: false,
+      flagCity: false,
+      flagPin: false,
+      stateName: "",
+      flat: "",
+      locality: "",
+      city: "",
+      pin: ""
+
+
     }
   }
 
@@ -93,6 +108,8 @@ class Checkout extends Component {
   };
 
   componentDidMount() {
+    let abc = this.getAddress()
+
     if (!this.state.flag) {
       this.getStepContent(0, "http://localhost:8080/api/")
     }
@@ -163,20 +180,149 @@ class Checkout extends Component {
 
   }
 
+
+
+  getAddress = () => {
+
+    let xhr = new XMLHttpRequest()
+    let that = this;
+    xhr.addEventListener('readystatechange', function () {
+      if (this.readyState === 4) {
+        console.log(this.responseText)
+        let abc = JSON.parse(this.responseText)
+        abc = abc.states
+        that.setState({ state: abc })
+      }
+    })
+    xhr.open('GET', 'http://localhost:8080/api/states')
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.setRequestHeader("Cache-Control", "no-cache");
+    xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
+    xhr.send()
+  }
+
+
+  onChangeFlatHandler = (e) => {
+    console.log(e.target.value)
+    this.setState({ flat: e.target.value })
+  }
+
+
+  onChangeCityHandler = (e) => {
+    this.setState({ city: e.target.value })
+  }
+
+
+  onChangeSelectHandler = (e) => {
+    this.setState({ stateName: e.target.value })
+  }
+
+
+  onChangeLocalityHandler = (e) => {
+    this.setState({ locality: e.target.value })
+  }
+
+
+  onChangePinHandler = (e) => {
+    this.setState({ pin: e.target.value })
+  }
+
+
+  handleSave = () => {
+    let num = 0;
+    if (this.state.flat === "") {
+      this.setState({ flagFlat: true })
+    }
+    else {
+      num++
+      this.setState({ flagFlat: false })
+    }
+    if (this.state.city === "") {
+      this.setState({ flagCity: true })
+    }
+    else {
+      num++
+      this.setState({ flagCity: false })
+    }
+    if (this.state.stateName === "") {
+      this.setState({ flagState: true })
+    }
+    else {
+      num++
+      this.setState({ flagState: false })
+    }
+
+    if (this.state.locality === "") {
+      this.setState({ flagLocality: true })
+    }
+    else {
+      num++
+      this.setState({ flagLocality: false })
+    }
+
+    if (this.state.pin === "") {
+      this.setState({ flagPin: true })
+    }
+    else if (this.state.pin.length !== 6 || (parseInt(this.state.pin) ? false : true)) {
+      this.setState({ flagPin: true })
+      document.getElementById('pin1').innerHTML = 'Pincode must contain only numbers and must be 6 digits long'
+
+    }
+    else {
+      num++
+      this.setState({ flagPin: false })
+    }
+
+
+    if (num === 5) {
+      let xhr = new XMLHttpRequest()
+      let that = this;
+      xhr.addEventListener('readystatechange', function () {
+        if (this.readyState === 4) {
+          console.log(this.responseText)
+        }
+      })
+      xhr.open('POST', 'http://localhost:8080/api/address')
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.setRequestHeader("Cache-Control", "no-cache");
+      xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
+      xhr.setRequestHeader("authorization", sessionStorage.getItem('access-token'))
+      let data = {};
+      data.city = this.state.city
+      data.flat_building_name = this.state.flat
+      data.locality = this.state.locality
+      data.pincode = this.state.pin
+      data.state_uuid = this.state.stateName
+      data = JSON.stringify(data)
+      xhr.send(data)
+      /*
+      {
+        "city": "string",
+        "flat_building_name": "string",
+        "locality": "string",
+        "pincode": "string",
+        "state_uuid": "string"
+      }
+      */
+    }
+
+
+
+  }
+
+
   render() {
-    let a = this.state.addresses
-    let b = a.addresses
     return (
       < div >
         <Header />
-        <div>
-          <div style={{ width: '70%', height: '85%' }}>
+        <div style={{ height: '100%' }}>
+          <div style={{ width: '70%', height: '100%' }}>
             <Stepper activeStep={this.state.activeStep} orientation="vertical" style={{ height: '70%' }}>
               {steps.map((label, index) => (
                 <Step key={label}>
                   <StepLabel>{label}</StepLabel>
                   <StepContent>
-                    <div className='scrollmenu' style={{ borderBottom: '1 px solid black', overflowX: 'scroll' }}>
+                    <div className='scrollmenu' style={{ borderBottom: '1 px solid black', overflowX: 'scroll', height: '100%' }}>
                       {this.state.index === 0 ?
                         <AppBar position="static">
                           <Tabs value={this.state.value} onChange={this.handleChange} aria-label="simple tabs example">
@@ -198,9 +344,11 @@ class Checkout extends Component {
                                 <span>{'' + address.pincode}</span><br />
                                 <IconButton id={'b' + val} onClick={this.iconAddressHandler.bind(this, val)} style={{ marginLeft: '60%' }}><CheckCircleIcon className='icon' id={'i' + val++} /></IconButton>
                               </div >
+                              <br /><br /><br />
                             </GridListTile>
 
                           )) : ""}
+                        <br /><br /><br />
                       </GridList>
 
                       {this.state.payment != "" ? <div>
@@ -217,6 +365,53 @@ class Checkout extends Component {
                         </FormControl>  </div> : ""
 
                       }
+                      {this.state.value === 1 ?
+                        <div>
+                          <FormControl required>
+                            <InputLabel htmlFor="flat">Flat/Buiding No.</InputLabel>
+                            <Input id="flat" onChange={this.onChangeFlatHandler} />
+                            <FormHelperText style={{ color: 'red' }} className={this.state.flagFlat ? 'dispBlock' : 'dispNone'}>required</FormHelperText>
+                          </FormControl><br /><br />
+
+                          <FormControl required>
+                            <InputLabel htmlFor="locality">Locality</InputLabel>
+                            <Input id="locality" onChange={this.onChangeLocalityHandler} />
+                            <FormHelperText style={{ color: 'red' }} className={this.state.flagLocality ? 'dispBlock' : 'dispNone'}>required</FormHelperText>
+                          </FormControl><br /><br />
+
+                          <FormControl required>
+                            <InputLabel htmlFor="city">City</InputLabel>
+                            <Input id="city" onChange={this.onChangeCityHandler} />
+                            <FormHelperText style={{ color: 'red' }} className={this.state.flagCity ? 'dispBlock' : 'dispNone'}>required</FormHelperText>
+                          </FormControl><br /><br />
+
+                          <FormControl required >
+                            <InputLabel htmlFor="state">State</InputLabel>
+
+
+
+
+                            <Select id="state" style={{ width: '200px' }} value={this.state.stateName} onChange={this.onChangeSelectHandler}>
+                              {this.state.state.map((state) => (
+
+                                <MenuItem name={state.state_name} key={state.state_name} value={state.id}>{state.state_name}</MenuItem>
+                              ))
+                              }
+                            </Select>
+                            <FormHelperText style={{ color: 'red' }} className={this.state.flagState ? 'dispBlock' : 'dispNone'}>required</FormHelperText>
+                          </FormControl><br /><br />
+
+
+
+                          <FormControl required>
+                            <InputLabel htmlFor="pincode">Pincode</InputLabel>
+                            <Input id="pincode" onChange={this.onChangePinHandler} />
+                            <FormHelperText id='pin1' style={{ color: 'red' }} className={this.state.flagPin ? 'dispBlock' : 'dispNone'}>required</FormHelperText>
+                          </FormControl><br /><br />
+
+                          <Button variant='contained' color='secondary' onClick={this.handleSave}>Save Address</Button>
+                        </div>
+                        : ""}
 
                     </div>
                     <Typography> {this.state.flag === false ? this.getStepContent(this.state.index, this.props.baseUrl) : ""}</Typography>

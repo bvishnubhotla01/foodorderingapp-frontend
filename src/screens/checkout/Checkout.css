@@ -1,0 +1,7 @@
+.dispBlock{
+display: block;
+color:  red;
+}
+.dispNone{
+    display: none;
+}
