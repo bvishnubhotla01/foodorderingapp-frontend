@@ -28,7 +28,8 @@ class Details extends Component {
             totalNumberOfItems: 0,
             totalPrice: 0,
             addedItemsList: [],
-            sucessMessage: ""           
+            successMessage: "",
+            showMessage: false           
         }
         
     }
@@ -108,7 +109,7 @@ render() {
                                             </span> 
                                         </div>
                         
-                                        <IconButton onClick={this.addingItemIntoCart.bind(this, item)}>
+                                        <IconButton onClick={this.addingItemIntoCart.bind(this, item, false)}>
                                                  <Add/>
                                         </IconButton>
                         
@@ -159,7 +160,7 @@ render() {
                             </div>
                             </CardContent>
                                 <CardActions>
-                                <Button variant="contained" color="primary" fullWidth={true}>
+                                <Button variant="contained" color="primary" fullWidth={true} onClick={this.checkoutHandler}>
                                     CHECKOUT
                                 </Button>
                              </CardActions> 
@@ -167,6 +168,29 @@ render() {
                      
                      </div>
                 </div>
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                    }}
+                    open={this.state.showMessage}
+                    onClose={this.handleClose}
+                    autoHideDuration={2000}
+                    ContentProps={{
+                        'aria-describedby': 'message-id'
+                    }}
+                    message={<span id="message-id"> {this.state.successMessage}</span>}
+                    action={[
+                        <IconButton
+                          key="close"
+                          aria-label="Close"
+                          color="inherit"
+                          onClick={this.handleClose}
+                        >
+                          <CloseIcon />
+                        </IconButton>
+                      ]}
+                />
                 </div>
                      
     )
@@ -196,10 +220,8 @@ getRestaurantCategories = () => {
     }
     return categoriesString;
 }
-addingItemIntoCart = (item) => {
-    console.log(this.state.addedItemsList);
+addingItemIntoCart = (item, showMsg) => {
     let itemList = this.state.addedItemsList.slice();
-    console.log(itemList);
     let found = false;
     if (itemList.length!==0 || !itemList!=null) {
         for (let i=0; i<itemList.length; i++){
@@ -217,8 +239,14 @@ addingItemIntoCart = (item) => {
         item_detail.quantity = 1;
         itemList.push(item_detail);
     }
-    console.log(item.id + " " + itemList.length + " " + found);
-    
+    let message = "Item quantity increased by 1"
+    if (showMsg === true) {
+        this.setState({
+            successMessage: message,
+            showMessage: true
+        })
+    }
+
     // Calculate Quantity and Total Price...
     var totalQuantity = 0;
     var totalAmount = 0;
@@ -233,28 +261,36 @@ addingItemIntoCart = (item) => {
         totalNumberOfItems:totalQuantity,
         totalPrice:totalAmount
     })
+    
     console.log(`${this.state.addedItemsList} ${this.state.totalNumberOfItems} ${this.state.totalPrice}`);
 }
 increaseQtyHandler = (item) => { 
-    this.addingItemIntoCart(item);
-    this.setState({sucessMessage: "Item quantity increased by 1"})
-
+    this.addingItemIntoCart(item, true);
+    
 }
 decreaseQtyHandler = (item) => {
     let itemList = this.state.addedItemsList.slice();
-    let isItemRemoved = false;
     if (itemList.length!==0 || !itemList!=null) {
         for (let i=0; i<itemList.length; i++){
             if (itemList[i].id === item.id){
                 if (itemList[i].quantity > 1) {
                     itemList[i].quantity = itemList[i].quantity - 1;
-                    this.setState({addedItemsList: itemList});
+                    var message = "Item quantity decreased by 1!";
+                    this.setState({
+                        addedItemsList: itemList,
+                        successMessage: message,
+                        showMessage: true
+                    });
                     break;
                 }              
                 else {
                     itemList.splice(i, 1);
-                    this.setState({addedItemsList: itemList});
-                    isItemRemoved = true;
+                    message = "Item removed from cart!";
+                    this.setState({
+                        addedItemsList: itemList,
+                        successMessage: message,
+                        showMessage: true });
+                    
                     break; 
                 }
         }
@@ -265,18 +301,46 @@ decreaseQtyHandler = (item) => {
             totalQuantity += object.quantity;
             totalAmount += object.quantity * object.price;
         }
-
-        var message = "Item quantity decreased by 1!";
-        if(isItemRemoved === true) {
-            message = "Item removed from cart!";
-        }
         this.setState({ 
-            successMessage: message,
             totalNumberOfItems: totalQuantity,
             totalPrice: totalAmount
         })
     }
-}
+    handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+        this.setState({ showMessage: false });
+    }
+    checkoutHandler = () => {
+        if(this.state.addedItemsList.length === 0){
+            this.setState({
+                showMessage: true,
+                successMessage: "Please add an item to your cart!"
+            })
+        } else {
+             // Check for Customer logged in or not ....
+            var token = sessionStorage.getItem('access-token');
+            console.log(token);
+            if (token === null || token === "" || token === undefined) {
+                this.setState({
+                    showMessage: true,
+                    successMessage: "Please login first!"
+                 })
+             }
+            else {
+                this.props.history.push({
+                    pathname: "/checkout",
+                    restaurant_id: this.props.match.params.id,
+                    restaurant_name : this.state.restaurantData.restaurant_name,
+                    itemList : this.state.addedItemsLists,
+                    totalAmount : this.state.totalPrice
+                 })
+             }
+            }
+            }
+
+    }
 
 
 export default Details;
