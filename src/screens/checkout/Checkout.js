@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Header from '../../common/header/Header';
+import './Checkout.css';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
@@ -427,7 +428,7 @@ class Checkout extends Component {
       this.props.location.restaurant_id === undefined ? <Redirect to="/home" /> :
         < div className='uppercontainer'>
           <Header />
-          <div className='topcontainer' style={{ height: '100%', display: 'flex', flexDirection: 'row' }}>
+          <div className='top1container' style={{ height: '100%'}} id='topmost'>
 
             <div style={{ width: '70%', height: '100%', marginTop: '0%' }}>
               <Stepper activeStep={this.state.activeStep} orientation="vertical" style={{ height: '70%' }}>

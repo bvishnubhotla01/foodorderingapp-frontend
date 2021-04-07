@@ -2,16 +2,26 @@
 display: block;
 color:  red;
 }
+
 .dispNone{
     display: none;
 }
-.topcontainer{
+.top1container{
     display: flex;
     flex-direction: row;
 }
+
 .veg{
     color: green;
 }
 .non-veg{
     color: red;
+}
+
+@media screen and (max-width: 1000px){
+
+    .topcontainer{
+    display: flex;
+    flex-direction: column
+}
 }
