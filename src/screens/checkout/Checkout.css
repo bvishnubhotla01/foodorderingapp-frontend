@@ -5,3 +5,13 @@ color:  red;
 .dispNone{
     display: none;
 }
+.topcontainer{
+    display: flex;
+    flex-direction: row;
+}
+.veg{
+    color: green;
+}
+.non-veg{
+    color: red;
+}
