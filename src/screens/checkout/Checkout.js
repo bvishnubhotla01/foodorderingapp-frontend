@@ -453,7 +453,7 @@ class Checkout extends Component {
                         {this.state.addresses === "" && (!(this.state.value)) ? <Typography>There are no saved addresses! You can save an address using the 'New Address' tab or using your ‘Profile’ menu option.</Typography> : ""}
 
                         <GridList cols={3}>
-                          {this.state.addresses.addresses != undefined && (this.state.value === 0) ? this.state.addresses.addresses.map((address) => (
+                          {this.state.addresses.addresses != undefined && (this.state.value === 0) && (this.state.activeStep === 0) ? this.state.addresses.addresses.map((address) => (
 
                             <GridListTile key={val} >
                               <div className='address' id={'c' + val}>
