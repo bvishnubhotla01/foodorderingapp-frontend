@@ -354,10 +354,14 @@ class Checkout extends Component {
     let id = ""
     let that = this;
     xhr.addEventListener('readystatechange', function () {
-      if (this.readyState === 4) {
+      if (this.readyState === 4 && this.status === 201) {
         console.log(this.responseText)
         id = (JSON.parse(this.responseText).id)
-        console.log('ID ID', id)
+        console.log('ID', id)
+        that.setState({ showMessage: true, successMessage: 'Order placed successfully! Your order ID is ' + id })
+      }
+      else {
+        that.setState({ showMessage: true, successMessage: 'Unable to place your order! Please try again!' })
       }
     })
     xhr.open('POST', 'http://localhost:8080/api/order')
@@ -389,8 +393,8 @@ class Checkout extends Component {
     data = JSON.stringify(data)
     xhr.send(data)
 
-    id = id.toString()
-    this.setState({ showMessage: true, successMessage: 'Order placed successfully! Your order ID is' + { id } })
+
+
 
   }
 
@@ -428,7 +432,7 @@ class Checkout extends Component {
       this.props.location.restaurant_id === undefined ? <Redirect to="/home" /> :
         < div className='uppercontainer'>
           <Header />
-          <div className='top1container' style={{ height: '100%'}} id='topmost'>
+          <div className='top1container' style={{ height: '100%' }} id='topmost'>
 
             <div style={{ width: '70%', height: '100%', marginTop: '0%' }}>
               <Stepper activeStep={this.state.activeStep} orientation="vertical" style={{ height: '70%' }}>
@@ -560,7 +564,7 @@ class Checkout extends Component {
               )}
             </div>
             {this.state.activeStepFlag === true ?
-              <div style={{ marginLeft: '20%', width: '30%', marginRight: '5%', height: '80%' }}>
+              <div className='summary' >
                 <Card>
                   <CardContent>
                     <Typography variant="h2" component="h2">
@@ -570,41 +574,41 @@ class Checkout extends Component {
                       {this.props.location.restaurant_name}
                     </Typography>
                     {this.props.location.itemList.map((item) => (
-                      <div style={{ display: 'flex', flexDirection: 'row' }}>
-                        <div style={{ width: '200px' }}><FontAwesomeIcon icon={faStopCircle} className={item.item_type === 'NON_VEG' ? "non-veg" : "veg"} />{item.item_name}</div>
-                        <div style={{ width: '100px' }}>{item.quantity}</div>
-                        <div style={{ width: '100px' }}> <FontAwesomeIcon icon={faRupeeSign} />{parseFloat(Math.round(item.price)).toFixed(2)}</div>
+                      <div className='mapclass' key={i++}>
+                        <div className='fontclass'><FontAwesomeIcon icon={faStopCircle} className={item.item_type === 'NON_VEG' ? "non-veg" : "veg"} />{item.item_name}</div>
+                        <div className='quantity' >{item.quantity}</div>
+                        <div className='awesomeclass'> <FontAwesomeIcon icon={faRupeeSign} />{parseFloat(Math.round(item.price)).toFixed(2)}</div>
 
                       </div>
                     ))}
                     <FormControl>
-                      <div style={{ display: 'flex', flexDirection: "row" }}>
+                      <div className='couponclass'>
                         <div >
                           <InputLabel htmlFor='apply'>Coupon Code</InputLabel>
                           <Input id='apply' onChange={this.couponHandler} />
                         </div>
                         <div>
-                          <Button variant='contained' color='default' style={{ marginLeft: '100px' }} onClick={this.discountHandler}>APPLY</Button>
+                          <Button variant='contained' color='default' className='applybtn' onClick={this.discountHandler}>APPLY</Button>
                         </div>
                       </div>
                     </FormControl>
                     <Divider />
-                    <div style={{ display: 'flex', flexDirection: 'row', marginTop: '3%' }}>
-                      <div style={{ color: 'grey' }}>
+                    <div className='subtotal' >
+                      <div>
                         Sub Total
                   </div>
-                      <div style={{ marginLeft: '220px' }}>
+                      <div className='farupee'>
                         <FontAwesomeIcon icon={faRupeeSign} />
                         {parseFloat(Math.round(this.props.location.totalAmount)).toFixed(2)}
                       </div>
 
                     </div>
 
-                    <div style={{ display: 'flex', flexDirection: 'row', marginTop: '3%' }}>
-                      <div style={{ color: 'grey' }}>
+                    <div className='discount' >
+                      <div >
                         Discount
                   </div>
-                      <div style={{ marginLeft: '220px' }}>
+                      <div className='farupee'>
                         <FontAwesomeIcon icon={faRupeeSign} />
 
                         {discount = this.state.percentDiscount != "" ? parseFloat(Math.round(this.props.location.totalAmount * this.state.percentDiscount / 100)).toFixed(2) : 0.00}
@@ -612,13 +616,13 @@ class Checkout extends Component {
 
                     </div>
                     <Divider />
-                    <div style={{ display: 'flex', flexDirection: 'row', marginTop: '3%' }}>
+                    <div className='netamount' >
                       <div>
                         <Typography>
                           Net Amount
                     </Typography>
                       </div>
-                      <div style={{ marginLeft: '220px' }}>
+                      <div className='farupee'>
                         <Typography>
                           <FontAwesomeIcon icon={faRupeeSign} />
                           {parseFloat(Math.round(this.props.location.totalAmount - discount)).toFixed(2)}
