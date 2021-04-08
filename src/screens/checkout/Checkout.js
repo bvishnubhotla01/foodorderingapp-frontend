@@ -55,7 +55,9 @@ let valueRadio;
 let i = 0;
 let x = 1
 let check = ""
-let discount = 0;
+let discount = 0
+
+let addressIndex = 0
 
 class Checkout extends Component {
 
@@ -86,9 +88,7 @@ class Checkout extends Component {
       checkoutAddress: "",
       coupon: "",
       percentDiscount: "",
-      couponId: ""
-
-
+      couponId: "",
     }
   }
   //check = this.props.location.checkoutSummary
@@ -154,6 +154,7 @@ class Checkout extends Component {
         xhr.addEventListener('readystatechange', function () {
           if (xhr.readyState === 4) {
             console.log(this.responseText)
+
             if (JSON.parse(this.responseText).addresses.length > 0) {
               that.setState({ addresses: JSON.parse(this.responseText), flag: true, activeStepFlag: false })
             }
@@ -450,8 +451,9 @@ class Checkout extends Component {
                           </AppBar> : ""}
 
                         {this.state.addresses === "" && (!(this.state.value)) ? <Typography>There are no saved addresses! You can save an address using the 'New Address' tab or using your ‘Profile’ menu option.</Typography> : ""}
+
                         <GridList cols={3}>
-                          {this.state.addresses.addresses != undefined && this.state.index === 0 ? this.state.addresses.addresses.map((address) => (
+                          {this.state.addresses.addresses != undefined && (this.state.value === 0) ? this.state.addresses.addresses.map((address) => (
 
                             <GridListTile key={val} >
                               <div className='address' id={'c' + val}>
@@ -483,7 +485,7 @@ class Checkout extends Component {
                           </FormControl>  </div> : ""
 
                         }
-                        {this.state.value === 1 ?
+                        {(this.state.value === 1) ?
                           <div>
                             <FormControl required>
                               <InputLabel htmlFor="flat">Flat/Buiding No.</InputLabel>
