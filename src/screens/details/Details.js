@@ -15,7 +15,6 @@ import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
 import CloseIcon from '@material-ui/icons/Close';
 import Badge from '@material-ui/core/Badge';
-import { withStyles } from '@material-ui/core/styles';
 
 
 class Details extends Component {
@@ -39,7 +38,6 @@ class Details extends Component {
     
     
 render() {
-    const { classes } = this.props;
     return (
         <div>
 
@@ -196,7 +194,8 @@ render() {
     )
 }
 getRestaurantDetails = () => {
-    let restaurantId = "246165d2-a238-11e8-9077-720006ceb890";
+    //let restaurantId = "246165d2-a238-11e8-9077-720006ceb890";
+    let restaurantId = this.props.match.params.id;
     return fetch(`http://localhost:8080/api/restaurant/${restaurantId}`)
     .then(response => response.json())
     .then(data => {
@@ -333,14 +332,13 @@ decreaseQtyHandler = (item) => {
                     pathname: "/checkout",
                     restaurant_id: this.props.match.params.id,
                     restaurant_name : this.state.restaurantData.restaurant_name,
-                    itemList : this.state.addedItemsLists,
+                    itemList : this.state.addedItemsList,
                     totalAmount : this.state.totalPrice
                  })
              }
             }
             }
-
+            
     }
-
 
 export default Details;
