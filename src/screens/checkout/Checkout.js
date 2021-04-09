@@ -430,7 +430,7 @@ class Checkout extends Component {
     console.log('From checkout', this.props.location)
     return (
 
-      this.props.location.restaurant_id === undefined ? <Redirect to="/home" /> :
+      this.props.location.restaurant_id === undefined ? <Redirect to="/" /> :
         < div className='uppercontainer'>
           <Header />
           <div className='top1container' style={{ height: '100%' }} id='topmost'>
