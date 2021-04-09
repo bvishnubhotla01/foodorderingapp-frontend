@@ -666,7 +666,7 @@ class Checkout extends Component {
           </div>
         </div >
 
-    );
+    )
 
   }
 }
