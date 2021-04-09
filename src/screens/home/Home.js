@@ -86,7 +86,7 @@ class Home extends Component {
            {restaurant.categories}
           </Typography>
           <div style = {{marginTop : '3%', display : 'flex', flexDirection : 'row'}}>
-            <div><span style = {{backgroundColor : 'darkorange', color : 'white'}}><FontAwesomeIcon icon={faStar} />    
+            <div><span style = {{backgroundColor : 'gold', color : 'white'}}><FontAwesomeIcon icon={faStar} />    
                 {restaurant.customer_rating}    ({restaurant.number_customers_rated})</span>
             </div>
             <div style = {{marginLeft : '55%'}}>  <FontAwesomeIcon icon = {faRupeeSign} />{restaurant.average_price}      for two
