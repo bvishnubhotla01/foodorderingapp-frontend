@@ -1,0 +1,213 @@
+.dispBlock{
+display: block;
+color:  red;
+}
+
+.dispNone{
+    display: none;
+}
+.top1container{
+    display: flex;
+    flex-direction: row;
+}
+
+.veg{
+    color: green;
+}
+.non-veg{
+    color: red;
+}
+.summary{
+    margin-left: 20%;
+    width: 30%;
+    margin-right: 5%;
+    height: 80%
+}
+.mapclass{
+    display: flex;
+ flex-direction: row
+}
+.fontclass{
+    width: 200px
+}
+.quantity{
+    width: 100px
+}
+.awesomeclass{
+width: 100px
+}
+.applybtn{
+    margin-left: 100px
+}
+
+.couponclass{
+    display: flex;
+ flex-direction: row
+}
+.subtotal{
+    display: flex;
+         flex-direction: row;
+         margin-top: 3%;
+         color : grey
+}
+.farupee{
+    margin-left: 220px 
+}
+
+.discount{
+    display: flex;
+     flex-direction: row;
+      margin-top: 3%;
+      color: grey;
+}
+.netamount{
+    display: flex;
+    flex-direction: row;
+     margin-top: 3%
+}
+
+
+@media screen and (max-width:1100px){
+    
+    .top1container{
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+      
+        width: 100%;
+        }
+        .summary{
+            margin-top: 5%;
+            margin-left: 0%;
+            width: 100%;
+            margin-right: 0%;
+            height: 80%;
+    
+        }
+       
+        .mapclass{
+            display: flex;
+ flex-direction: row
+        }
+        .fontclass{
+            width: 200px
+        }
+        .quantity{
+            width: 200px
+        }
+        .awesomeclass{
+        width: 200px
+        }
+        .couponclass{
+            display: flex;
+            flex-direction: row
+        
+        
+        }
+        .applybtn{
+            margin-left: 100px
+        }
+    
+    
+        .subtotal{
+            display: flex;
+                 flex-direction: row;
+                 margin-top: 3%;
+                 color : grey;
+                
+        }
+        .farupee{
+            margin-left: 220px 
+        }
+        
+        .discount{
+            display: flex;
+             flex-direction: row;
+              margin-top: 3%;
+              color: grey;
+              
+        }
+        .netamount{
+            display: flex;
+            flex-direction: row;
+             margin-top: 3%;
+             
+             }
+    
+    
+}
+
+@media screen and (max-width: 500px){
+
+    .top1container{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 100%;
+    }
+    .summary{
+        margin-top: 5%;
+        margin-left: 0%;
+        width: 100%;
+        margin-right: 0%;
+        height: 50%;
+        flex-wrap: wrap;
+
+    }
+   
+    .mapclass{
+        display: block;
+        flex-wrap: wrap;
+        width: 100%;
+    }
+    .fontclass{
+        width: 50px
+    }
+    .quantity{
+        width: 50px
+    }
+    .awesomeclass{
+    width: 50px
+    }
+    .couponclass{
+        display: flex;
+     flex-direction: column;
+     flex-wrap: wrap;
+     width: 100%;
+    }
+    .applybtn{
+        margin-left: '0%';
+    }
+
+
+    .couponclass{
+        display: flex;
+     flex-direction: column;
+     flex-wrap: wrap;
+    }
+    .subtotal{
+        display: flex;
+             flex-direction: column;
+             margin-top: 3%;
+             color : grey;
+             flex-wrap: wrap;
+    }
+    .farupee{
+        margin-left: 1px 
+    }
+    
+    .discount{
+        display: flex;
+         flex-direction: column;
+          margin-top: 3%;
+          color: grey;
+          flex-wrap: wrap;
+    }
+    .netamount{
+        display: flex;
+        flex-direction: column;
+         margin-top: 3%;
+         flex-wrap: wrap;
+         }
+
+}
