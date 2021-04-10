@@ -97,6 +97,7 @@ class Header extends Component {
       snackBarOpen: false,
       snackBarText: "",
       menuIsOpen: false,
+      searchText : "",
     };
   }
 
@@ -225,7 +226,7 @@ class Header extends Component {
         }
       }
     });
-    xhrLogin.open("POST", this.props.baseUrl + "customer/login");
+    xhrLogin.open("POST", 'http://localhost:8080/api/' + "customer/login");
     xhrLogin.setRequestHeader(
       "authorization",
       "Basic " + window.btoa(this.state.username + ":" + this.state.password)
@@ -343,6 +344,16 @@ class Header extends Component {
     this.setState({ snackBarOpen: false });
   };
 
+  inputHandler = (e)=>{
+   //console.log(this.props)
+   this.props.onChange(e)
+  }
+
+  colorChangeHandler = ()=>{
+    let a = document.getElementById('search')
+    a.style.borderBottom = '2px solid white'
+  }
+
   render() {
     const { classes } = this.props;
 
@@ -360,6 +371,9 @@ class Header extends Component {
               <Input
                 className={classes.searchInput}
                 placeholder="Search by Restaurant Name"
+                onChange = {this.inputHandler}
+                onClick = {this.colorChangeHandler}
+                id = 'search'
               />
             </div>
           )}
@@ -688,6 +702,7 @@ class Header extends Component {
           ]}
         />
       </div>
+      
     );
   }
 }
