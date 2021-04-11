@@ -148,7 +148,7 @@ componentWillUnmount(){
         xhr.addEventListener("readystatechange", function () {
           console.log('addEvent listener', that._isMounted)
           if (this.readyState === 4) {
-            if (!(isUndefinedOrNull(JSON.parse(this.responseText))) && JSON.parse(this.responseText).addresses.length > 0 && that._isMounted) {
+            if (!(isUndefinedOrNull(JSON.parse(this.responseText))) && JSON.parse(this.responseText).addresses?.length > 0 && that._isMounted) {
               that.setState({
                 addresses: JSON.parse(this.responseText),
                 flag: true,
