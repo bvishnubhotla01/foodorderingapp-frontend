@@ -31,6 +31,7 @@ import Snackbar from "@material-ui/core/Snackbar";
 import CloseIcon from "@material-ui/icons/Close";
 import { Redirect } from "react-router-dom";
 import { setRequestHeaders } from "../../common/Helpers";
+import { isUndefinedOrNull } from "../../common/Helpers"
 
 const steps = ["Delivery", "Payment"];
 let val = 0;
@@ -139,7 +140,7 @@ class Checkout extends Component {
       case 0:
         xhr.addEventListener("readystatechange", function () {
           if (xhr.readyState === 4) {
-            if (JSON.parse(this.responseText).addresses.length > 0) {
+            if (isUndefinedOrNull(JSON.parse(this.responseText)) && JSON.parse(this.responseText).addresses.length > 0) {
               that.setState({
                 addresses: JSON.parse(this.responseText),
                 flag: true,
@@ -395,10 +396,6 @@ class Checkout extends Component {
                   <StepContent>
                     <div
                       className="scrollmenu"
-                      style={{
-                        borderBottom: "1 px solid black",
-                        overflowX: "scroll",
-                      }}
                     >
                       {this.state.index === 0 ? (
                         <AppBar position="static">
