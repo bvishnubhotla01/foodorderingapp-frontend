@@ -2,7 +2,6 @@
 .header-main-container {
   background-color: #263238;
   padding: 16px;
-  /*margin-bottom: 16px;*/
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
@@ -101,4 +100,15 @@
   margin-bottom: 20px;
 }
 
+.login-button {
+  text-transform: capitalize;
+  font-size: 120%;
+  background-color: #263238;
+  color: lightgrey !important;
+}
+
+.profile-link {
+  text-decoration: none;
+  color: black;
+}
 /*Css styling for Header ends here*/

@@ -4,7 +4,7 @@ import Header from "../../common/header/Header";
 class Profile extends Component {
   render() {
     return (
-      <div className="mainDiv">
+      <div>
         <Header />
         Profile page
       </div>
