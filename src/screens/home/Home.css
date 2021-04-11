@@ -1,28 +1,25 @@
-.topcontainer{
-    display: grid;
-    grid-template-columns: auto auto auto ;
-    padding: 10px;
-  }
-.cardcontainer{
-width : 400px;  
-margin-top : 5%
+.top-container {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  padding: 10px;
+}
+.card-container {
+  width: 400px;
+  margin-top: 5%;
 }
 
-@media screen and (max-width : 1250px){
-
-  .topcontainer{
+@media screen and (max-width: 1250px) {
+  .top-container {
     display: grid;
     grid-template-columns: auto auto;
     padding: 10px;
   }
 }
 
-  @media screen and (max-width : 850px){
-
-    .topcontainer{
-      display: grid;
-      grid-template-columns: auto;
-      padding: 10px;
-    }
-  
+@media screen and (max-width: 850px) {
+  .top-container {
+    display: grid;
+    grid-template-columns: auto;
+    padding: 10px;
+  }
 }

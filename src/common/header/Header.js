@@ -20,7 +20,9 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import Snackbar from "@material-ui/core/Snackbar";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
+import { AuthErrorCodes, SignUpErrorCodes } from "../Constants";
 
+//#region Styles
 const styles = {
   root: {
     color: "#FFFFFF",
@@ -48,9 +50,10 @@ const customStyles = {
     transform: "translate(-50%, -50%)",
   },
 };
+//#endregion
 
-// Tabs
-const TabContainer = function(props) {
+//#region Tabs
+const TabContainer = function (props) {
   return (
     <Typography component="div" style={{ padding: 0, textAlign: "center" }}>
       {props.children}
@@ -61,10 +64,12 @@ const TabContainer = function(props) {
 TabContainer.propTypes = {
   children: PropTypes.node.isRequired,
 };
+//#endregion
 
 class Header extends Component {
   constructor() {
     super();
+    //#region Initial State
     this.state = {
       modalIsOpen: false,
       value: 0,
@@ -97,17 +102,19 @@ class Header extends Component {
       snackBarOpen: false,
       snackBarText: "",
       menuIsOpen: false,
-      searchText : "",
+      searchText: "",
     };
+    //#endregion
   }
 
-  componentDidMount() {}
-
+  //#region Handler Methods
   openModalHandler = () => {
     this.setState({
       modalIsOpen: true,
       value: 0,
       email: "",
+      username: "",
+      password: "",
       firstName: "",
       lastName: "",
       mobile: "",
@@ -126,7 +133,6 @@ class Header extends Component {
       lastNameRequired: "dispNone",
       mobileRequired: "dispNone",
       passwordRegRequired: "dispNone",
-      loginErrorMsg: "",
     });
   };
 
@@ -165,7 +171,6 @@ class Header extends Component {
   inputPasswordRegisterChangeHandler = (e) => {
     this.setState({ passwordReg: e.target.value });
   };
-
   loginClickHandler = () => {
     //Clearing error texts during login
     this.setState({ loginInvalidContactNo: "" });
@@ -196,12 +201,12 @@ class Header extends Component {
     let that = this;
     let dataLogin = null;
     let xhrLogin = new XMLHttpRequest();
-    xhrLogin.addEventListener("readystatechange", function() {
+    xhrLogin.addEventListener("readystatechange", function () {
       if (this.readyState === 4) {
         let loginResponse = JSON.parse(xhrLogin.response);
         if (
-          loginResponse.code === "ATH-001" ||
-          loginResponse.code === "ATH-002"
+          loginResponse.code === AuthErrorCodes.AUTH_ERR_1 ||
+          loginResponse.code === AuthErrorCodes.AUTH_ERR_2
         ) {
           that.setState({ loginError: "dispBlock" });
           that.setState({ loginErrCode: loginResponse.code });
@@ -226,7 +231,7 @@ class Header extends Component {
         }
       }
     });
-    xhrLogin.open("POST", 'http://localhost:8080/api/' + "customer/login");
+    xhrLogin.open("POST", this.props.baseUrl + "customer/login");
     xhrLogin.setRequestHeader(
       "authorization",
       "Basic " + window.btoa(this.state.username + ":" + this.state.password)
@@ -236,12 +241,11 @@ class Header extends Component {
     xhrLogin.setRequestHeader("Access-Control-Allow-Origin", "*");
     xhrLogin.send(dataLogin);
   };
-
   signUpClickHandler = () => {
     //clear error messages
     this.setState({ signUpErrorMsg: "" });
     this.setState({ signUpErrCode: "" });
-    //Checking if any input fields are empty
+    //Check if any input fields are empty
     this.state.email === ""
       ? this.setState({ emailRequired: "dispBlock" })
       : this.setState({ emailRequired: "dispNone" });
@@ -273,14 +277,14 @@ class Header extends Component {
     };
 
     let xhrSignup = new XMLHttpRequest();
-    xhrSignup.addEventListener("readystatechange", function() {
+    xhrSignup.addEventListener("readystatechange", function () {
       if (this.readyState === 4) {
         let signupResponse = JSON.parse(this.response);
         if (
-          signupResponse.code === "SGR-001" ||
-          signupResponse.code === "SGR-002" ||
-          signupResponse.code === "SGR-003" ||
-          signupResponse.code === "SGR-004"
+          signupResponse.code === SignUpErrorCodes.SIGNUP_ERR_1 ||
+          signupResponse.code === SignUpErrorCodes.SIGNUP_ERR_2 ||
+          signupResponse.code === SignUpErrorCodes.SIGNUP_ERR_3 ||
+          signupResponse.code === SignUpErrorCodes.SIGNUP_ERR_4
         ) {
           that.setState({ signupError: "dispBlock" });
 
@@ -302,19 +306,16 @@ class Header extends Component {
     xhrSignup.setRequestHeader("Access-Control-Allow-Origin", "*");
     xhrSignup.send(JSON.stringify(dataSignup));
   };
-
   openMessageHandler = () => {
     this.setState({ snackBarOpen: true });
     this.setState({ modalIsOpen: true });
     this.setState({ value: 0 });
   };
-
   openMessageHandlerPostLogin = () => {
     this.setState({ snackBarOpen: true });
     this.setState({ modalIsOpen: false });
     this.setState({ value: 0 });
   };
-
   openMenuHandler = (event) => {
     this.setState({
       menuIsOpen: true,
@@ -323,36 +324,40 @@ class Header extends Component {
       anchorEl: event.currentTarget,
     });
   };
-
   closeMenuHandler = () => {
     this.setState({
       menuIsOpen: false,
     });
   };
-
   handleClose = () => {
     this.setState({
       open: false,
       showUserProfileDropDown: !this.state.showUserProfileDropDown,
     });
   };
-
   handleSnackBarClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
     this.setState({ snackBarOpen: false });
   };
+  inputHandler = (e) => {
+    this.props.onChange(e);
+  };
 
-  inputHandler = (e)=>{
-   //console.log(this.props)
-   this.props.onChange(e)
-  }
-
-  colorChangeHandler = ()=>{
-    let a = document.getElementById('search')
-    a.style.borderBottom = '2px solid white'
-  }
+  colorChangeHandler = () => {
+    let a = document.getElementById("search");
+    a.style.borderBottom = "2px solid white";
+  };
+  logOutClickHandler = () => {
+    sessionStorage.clear();
+    this.setState({ loggedIn: false });
+    this.setState({ firstName: "" });
+    this.props.history.push({
+      pathname: "/",
+    });
+  };
+  //#endregion
 
   render() {
     const { classes } = this.props;
@@ -361,7 +366,9 @@ class Header extends Component {
       <div className="topMain">
         <div className="header-main-container">
           <div className="header-logo-container">
-            <Fastfood className={classes.icon} />
+            <a href="/">
+              <Fastfood className={classes.icon} />
+            </a>
           </div>
           {this.props.showSearch && (
             <div className="header-search-container">
@@ -371,9 +378,9 @@ class Header extends Component {
               <Input
                 className={classes.searchInput}
                 placeholder="Search by Restaurant Name"
-                onChange = {this.inputHandler}
-                onClick = {this.colorChangeHandler}
-                id = 'search'
+                onChange={this.inputHandler}
+                onClick={this.colorChangeHandler}
+                id="search"
               />
             </div>
           )}
@@ -391,15 +398,7 @@ class Header extends Component {
             </div>
           ) : (
             <div>
-              <Button
-                style={{
-                  textTransform: "capitalize",
-                  fontSize: "120%",
-                  background: " #263238",
-                  color: "lightgrey",
-                }}
-                onClick={this.openMenuHandler}
-              >
+              <Button className="login-button" onClick={this.openMenuHandler}>
                 <AccountCircle />
                 <span style={{ paddingLeft: "3%" }}>
                   {" "}
@@ -416,14 +415,13 @@ class Header extends Component {
                   anchorEl={this.state.anchorEl}
                 >
                   <MenuItem onClick={this.handleClose}>
-                    <Link
-                      to="/profile"
-                      style={{ textDecoration: "none", color: "black" }}
-                    >
+                    <Link to="/profile" className="profile-link">
                       My Profile
                     </Link>
                   </MenuItem>
-                  <MenuItem onClick={this.props.logoutHandler}>Logout</MenuItem>
+                  <MenuItem onClick={this.props.logOutClickHandler}>
+                    Logout
+                  </MenuItem>
                 </Menu>
               </div>
             </div>
@@ -462,7 +460,7 @@ class Header extends Component {
                   {this.state.loginInvalidContactNo}
                 </Typography>
 
-                {this.state.loginErrCode === "ATH-001" ? (
+                {this.state.loginErrCode === AuthErrorCodes.AUTH_ERR_1 ? (
                   <FormControl className={classes.formControl}>
                     <Typography
                       variant="subtitle1"
@@ -492,7 +490,7 @@ class Header extends Component {
                   <span className="red">required</span>
                 </FormHelperText>
 
-                {this.state.loginErrCode === "ATH-002" ? (
+                {this.state.loginErrCode === AuthErrorCodes.AUTH_ERR_2 ? (
                   <FormControl className={classes.formControl}>
                     <Typography
                       variant="subtitle1"
@@ -546,9 +544,6 @@ class Header extends Component {
                     onChange={this.inputLastNameChangeHandler}
                     value={this.state.lastName}
                   />
-                  <FormHelperText className={this.state.lastNameRequired}>
-                    <span className="red">required</span>
-                  </FormHelperText>
                 </FormControl>
                 <br />
                 <br />
@@ -564,7 +559,8 @@ class Header extends Component {
                   <FormHelperText className={this.state.emailRequired}>
                     <span className="red">required</span>
                   </FormHelperText>
-                  {this.state.signUpErrCode === "SGR-002" ? (
+                  {this.state.signUpErrCode ===
+                  SignUpErrorCodes.SIGNUP_ERR_1 ? (
                     <FormControl className={classes.formControl}>
                       <Typography
                         variant="subtitle1"
@@ -597,7 +593,8 @@ class Header extends Component {
                   <FormHelperText className={this.state.passwordRegRequired}>
                     <span className="red">required</span>
                   </FormHelperText>
-                  {this.state.signUpErrCode === "SGR-004" ? (
+                  {this.state.signUpErrCode ===
+                  SignUpErrorCodes.SIGNUP_ERR_4 ? (
                     <FormControl className={classes.formControl}>
                       <Typography
                         variant="subtitle1"
@@ -628,7 +625,8 @@ class Header extends Component {
                     <span className="red">required</span>
                   </FormHelperText>
 
-                  {this.state.signUpErrCode === "SGR-003" ? (
+                  {this.state.signUpErrCode ===
+                  SignUpErrorCodes.SIGNUP_ERR_3 ? (
                     <FormControl className={classes.formControl}>
                       <Typography
                         variant="subtitle1"
@@ -644,7 +642,8 @@ class Header extends Component {
                     ""
                   )}
 
-                  {this.state.signUpErrCode === "SGR-001" ? (
+                  {this.state.signUpErrCode ===
+                  SignUpErrorCodes.SIGNUP_ERR_1 ? (
                     <FormControl className={classes.formControl}>
                       <Typography
                         variant="subtitle1"
@@ -702,7 +701,6 @@ class Header extends Component {
           ]}
         />
       </div>
-      
     );
   }
 }

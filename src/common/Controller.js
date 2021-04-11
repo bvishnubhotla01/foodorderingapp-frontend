@@ -3,11 +3,11 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import Home from "../screens/home/Home";
 import Checkout from "../screens/checkout/Checkout";
 import Details from "../screens/details/Details";
+import Profile from "../screens/profile/Profile";
 
 class Controller extends Component {
   constructor() {
     super();
-    //TODO: Replace with the provided API url before submission
     this.baseUrl = "http://localhost:8080/api/";
   }
 
@@ -29,6 +29,11 @@ class Controller extends Component {
             exact
             path="/checkout"
             render={(props) => <Checkout {...props} baseUrl={this.baseUrl} />}
+          />
+          <Route
+            exact
+            path="/profile"
+            render={(props) => <Profile {...props} baseUrl={this.baseUrl} />}
           />
         </div>
       </Router>
