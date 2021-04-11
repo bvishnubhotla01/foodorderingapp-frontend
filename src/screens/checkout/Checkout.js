@@ -40,7 +40,9 @@ let valueRadio;
 let i = 0;
 let discount = 0;
 
+
 class Checkout extends Component {
+ _isMounted = false;
   constructor() {
     super();
     this.state = {
@@ -124,23 +126,29 @@ class Checkout extends Component {
   handleChange = (event, value) => {
     this.setState({ value: value, i: 0 });
   };
-
+componentWillUnmount(){
+    this._isMounted = false
+}
   componentDidMount() {
+    this._isMounted = true
+    console.log(this._isMounted)
     this.getAddress();
 
     if (!this.state.flag) {
       this.getStepContent(0, this.props.baseUrl);
     }
+  
   }
   getStepContent(step, url) {
-    let that = this;
     let xhr = new XMLHttpRequest();
 
     switch (step) {
       case 0:
+        let that = this;
         xhr.addEventListener("readystatechange", function () {
-          if (xhr.readyState === 4) {
-            if (isUndefinedOrNull(JSON.parse(this.responseText)) && JSON.parse(this.responseText).addresses.length > 0) {
+          console.log('addEvent listener', that._isMounted)
+          if (this.readyState === 4) {
+            if (!(isUndefinedOrNull(JSON.parse(this.responseText))) && JSON.parse(this.responseText).addresses.length > 0 && that._isMounted) {
               that.setState({
                 addresses: JSON.parse(this.responseText),
                 flag: true,
@@ -153,13 +161,16 @@ class Checkout extends Component {
 
         break;
       case 1:
+        let that1 = this
         xhr.addEventListener("readystatechange", function () {
-          if (xhr.readyState === 4) {
-            that.setState({
+          if (this.readyState === 4) {
+            if(that1._isMounted) {
+            that1.setState({
               payment: JSON.parse(this.responseText),
               flag: true,
               activeStepFlag: false,
             });
+          }
           }
         });
         xhr.open("GET", url + "payment");
@@ -201,7 +212,9 @@ class Checkout extends Component {
     xhr.addEventListener("readystatechange", function () {
       if (this.readyState === 4) {
         const response = JSON.parse(this.responseText)?.states;
+        if(that._isMounted){
         that.setState({ state: response });
+        }
       }
     });
     xhr.open("GET", `${this.props.baseUrl}states`);
@@ -562,8 +575,7 @@ class Checkout extends Component {
                               style={{ width: "200px" }}
                               value={this.state.stateName}
                               onChange={this.onSelectChangeHandler}
-                            >
-                              {this.state.state.map((state) => (
+                            >{this.state.state !== "" ? this.state.state.map((state) => (
                                 <MenuItem
                                   name={state.state_name}
                                   key={state.state_name}
@@ -571,7 +583,7 @@ class Checkout extends Component {
                                 >
                                   {state.state_name}
                                 </MenuItem>
-                              ))}
+                              )):""}
                             </Select>
                             <FormHelperText
                               style={{ color: "red" }}
