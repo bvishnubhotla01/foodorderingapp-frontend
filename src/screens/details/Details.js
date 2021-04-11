@@ -197,7 +197,8 @@ class Details extends Component {
   }
   getRestaurantDetails = () => {
     //console.log(this.props.location.pathname.split('/')[2])
-    let restaurantId = this.props.location.pathname.split('/')[2].toString();
+    console.log(this.props.match)
+    let restaurantId = this.props.match.params.id;
     return fetch(`http://localhost:8080/api/restaurant/${restaurantId}`)
       .then(response => response.json())
       .then(data => {
@@ -221,7 +222,7 @@ class Details extends Component {
     }
     return categoriesString;
   }
-  addingItemIntoCart = (item, showMsg) => {
+  addingItemIntoCart = (item, showMsg, cartFlag) => {
     let itemList = this.state.addedItemsList.slice();
     let found = false;
     if (itemList.length !== 0 || !itemList != null) {
@@ -243,9 +244,16 @@ class Details extends Component {
       itemList.push(item_detail);
     }
     let message = "Item quantity increased by 1"
-    if (showMsg === true) {
+    let message1 = "Item added to cart!"
+    if (showMsg === true && cartFlag) {
       this.setState({
         successMessage: message,
+        showMessage: true
+      })
+    }
+    else{
+      this.setState({
+        successMessage: message1,
         showMessage: true
       })
     }
@@ -268,7 +276,7 @@ class Details extends Component {
     console.log(`${this.state.addedItemsList} ${this.state.totalNumberOfItems} ${this.state.totalPrice}`);
   }
   increaseQtyHandler = (item) => {
-    this.addingItemIntoCart(item, true);
+    this.addingItemIntoCart(item, true, true);
 
   }
   decreaseQtyHandler = (item) => {
