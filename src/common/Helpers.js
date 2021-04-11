@@ -120,7 +120,7 @@ export const makeApiCall = (
 export function setRequestHeaders(xhr, needAccessToken) {
   if (needAccessToken === true) {
     xhr.setRequestHeader(
-      "authorization",
+      "authorization", "Bearer " + 
       sessionStorage.getItem("access-token")
     );
   }
